@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Routine Chart Maker — 12 Languages for Kids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FFF7EA; --surface:#FFFFFF; --surface2:#FFF1D6; --ink:#2E2418; --ink-soft:#6B5B45;
+    --line:#F0DFC2; --accent:#E8760B; --accent-ink:#FFFFFF; --teal:#0E7C74; --teal-soft:#DFF3F0;
+    --chip:#FFF1D6; --chip-on:#E8760B; --shadow:0 10px 30px rgba(120,72,10,.12);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1D1710; --surface:#2A211A; --surface2:#33281E; --ink:#F7EBD7; --ink-soft:#CBB896;
+      --line:#453723; --accent:#F59A23; --accent-ink:#241A0C; --teal:#3EC6B8; --teal-soft:#173B37;
+      --chip:#33281E; --chip-on:#F59A23; --shadow:0 10px 30px rgba(0,0,0,.4);
+      color-scheme: dark;
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,sans-serif;font-size:16px;line-height:1.5}
+  button,[role="button"],select,input:not([type="checkbox"]){min-height:2.25rem}
+  button{font-family:inherit;cursor:pointer}
+  h1,h2,h3,.display{font-family:"Baloo 2","Nunito",sans-serif;line-height:1.15;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 16px 56px}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:30px 0 8px;text-align:left}
+  .hero h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;letter-spacing:-.01em}
+  .hero h1 .hl{color:var(--accent)}
+  .hero p{max-width:680px;color:var(--ink-soft);font-size:1.05rem;margin:10px 0 0}
+  .hero .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .badge{background:var(--surface);border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:700;font-size:.85rem;box-shadow:var(--shadow)}
+
+  /* ---------- Layout ---------- */
+  .layout{display:grid;grid-template-columns:400px 1fr;gap:22px;margin-top:22px;align-items:start}
+  @media (max-width:920px){.layout{grid-template-columns:1fr}}
+
+  .panel{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+  .panel + .panel{margin-top:18px}
+  .panel h2{font-size:1.2rem;font-weight:800;margin-bottom:4px}
+  .panel .sub{color:var(--ink-soft);font-size:.9rem;margin:0 0 14px}
+  label.flabel{display:block;font-weight:800;font-size:.85rem;margin:14px 0 6px}
+  label.flabel:first-of-type{margin-top:0}
+  input[type="text"]{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;font:inherit;font-weight:700;background:var(--surface);color:var(--ink)}
+  input[type="text"]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  select{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-weight:700;background:var(--surface);color:var(--ink);min-height:2.75rem}
+  select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .lang-grid label.flabel{margin-top:14px}
+
+  .seg{display:flex;background:var(--surface2);border-radius:12px;padding:4px;gap:4px}
+  .seg button{flex:1;border:0;background:transparent;border-radius:9px;font-weight:800;font-size:.9rem;color:var(--ink-soft);padding:8px 4px;min-height:2.5rem}
+  .seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+
+  .themes{display:flex;gap:10px;flex-wrap:wrap}
+  .theme-btn{width:44px;height:44px;border-radius:50%;border:3px solid transparent;padding:0;position:relative}
+  .theme-btn.on{border-color:var(--ink)}
+  .theme-btn span{position:absolute;inset:4px;border-radius:50%}
+
+  /* step library */
+  .lib{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .lib-btn{display:flex;align-items:center;gap:9px;text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:13px;padding:8px 10px;font-weight:700;font-size:.88rem;color:var(--ink);min-height:3rem}
+  .lib-btn .pic{font-size:1.35rem;line-height:1;flex:none}
+  .lib-btn .hi{display:block;font-weight:600;font-size:.76rem;color:var(--ink-soft)}
+  .lib-btn.on{border-color:var(--teal);background:var(--teal-soft)}
+  .lib-btn.on .tick{margin-left:auto;color:var(--teal);font-weight:900;flex:none}
+  .lib-btn .tick{margin-left:auto;color:transparent;flex:none}
+  .lib-btn:disabled{opacity:.45;cursor:not-allowed}
+
+  .custom-row{display:flex;gap:8px}
+  .custom-row input{flex:1}
+  .icon-pick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .icon-pick button{width:42px;height:42px;font-size:1.25rem;border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:0}
+  .icon-pick button.on{border-color:var(--accent);background:var(--surface2)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;font-weight:800;padding:10px 18px;font-size:.95rem}
+  .btn-accent{background:var(--accent);color:var(--accent-ink)}
+  .btn-teal{background:var(--teal);color:#fff}
+  @media (prefers-color-scheme: dark){.btn-teal{color:#0B2422}}
+  .btn-ghost{background:var(--surface2);color:var(--ink)}
+  .btn-block{width:100%;margin-top:12px}
+
+  /* selected list */
+  .sel-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .sel-list li{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:11px;padding:6px 8px 6px 12px;font-weight:700;font-size:.9rem}
+  .sel-list .pic{font-size:1.2rem}
+  .sel-list .mini{margin-left:auto;display:flex;gap:4px}
+  .sel-list .mini button{width:36px;height:36px;border:0;border-radius:9px;background:var(--surface);color:var(--ink);font-weight:900;padding:0}
+  .empty-note{color:var(--ink-soft);font-size:.9rem}
+
+  /* ---------- Chart preview ---------- */
+  .preview-col{position:sticky;top:14px}
+  @media (max-width:920px){.preview-col{position:static}}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  .actions .btn{flex:1;min-width:140px;min-height:3rem;font-size:1rem}
+
+  .chart{
+    --c-accent:#E8760B; --c-soft:#FFF1D6; --c-deep:#B85A05;
+    background:#FFFFFF;color:#2E2418;border-radius:22px;padding:26px 26px 20px;
+    box-shadow:0 18px 44px rgba(90,50,0,.18);border:3px solid var(--c-soft);
+    font-family:"Nunito",sans-serif;
+  }
+  .chart[data-theme="sky"]{--c-accent:#1D7FC4;--c-soft:#E1F1FC;--c-deep:#155E91}
+  .chart[data-theme="mint"]{--c-accent:#1E9E6A;--c-soft:#DFF6EA;--c-deep:#14704B}
+  .chart[data-theme="berry"]{--c-accent:#D64E7E;--c-soft:#FDE4EE;--c-deep:#A93360}
+  .chart-head{display:flex;align-items:center;gap:14px;border-bottom:3px dashed var(--c-soft);padding-bottom:14px}
+  .chart-head .sun{font-size:2.6rem;line-height:1;background:var(--c-soft);width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+  .chart-head h2{font-family:"Baloo 2",sans-serif;font-size:clamp(1.3rem,3.4vw,1.8rem);font-weight:800;color:var(--c-deep)}
+  .chart-head .kid{font-size:clamp(1.05rem,2.8vw,1.35rem);font-weight:800}
+  .chart-head .kid-hi{color:#8A7454;font-weight:700;font-size:.95rem}
+
+  .progress{margin:14px 0 4px}
+  .progress .ptext{font-weight:800;font-size:.92rem;display:flex;justify-content:space-between}
+  .progress .ptext .stars{color:#F5A623;letter-spacing:2px}
+  .pbar{height:12px;background:var(--c-soft);border-radius:99px;overflow:hidden;margin-top:6px}
+  .pbar i{display:block;height:100%;width:0;background:var(--c-accent);border-radius:99px;transition:width .35s ease}
+  .celebrate{display:none;margin-top:10px;background:var(--c-soft);color:var(--c-deep);font-family:"Baloo 2",sans-serif;font-weight:800;text-align:center;border-radius:12px;padding:9px;font-size:1.05rem}
+  .celebrate.show{display:block}
+
+  .steps{list-style:none;margin:10px 0 0;padding:0}
+  .step{display:flex;align-items:center;gap:13px;padding:9px 4px;border-bottom:2px solid #F6EBD7}
+  .step:last-child{border-bottom:0}
+  .step .num{font-family:"Baloo 2",sans-serif;font-weight:800;color:var(--c-accent);width:22px;text-align:center;flex:none;font-size:1.05rem}
+  .step .pic{font-size:1.9rem;line-height:1;width:52px;height:52px;background:var(--c-soft);border-radius:16px;display:flex;align-items:center;justify-content:center;flex:none}
+  .step .words{flex:1;min-width:0}
+  .step .en{font-weight:800;font-size:1.06rem;line-height:1.25}
+  .step .hi{font-weight:700;color:#8A7454;font-size:.92rem;line-height:1.3}
+  .step.done .en,.step.done .hi{text-decoration:line-through;opacity:.55}
+  .tickbox{width:46px;height:46px;flex:none;border:3px solid var(--c-accent);border-radius:14px;background:#fff;font-size:1.4rem;color:var(--c-accent);display:flex;align-items:center;justify-content:center;padding:0;font-weight:900}
+  .tickbox.tick-on{background:var(--c-accent);color:#fff}
+
+  /* weekly grid */
+  .week-head,.week-row{display:grid;grid-template-columns:1fr repeat(7,40px);gap:5px;align-items:center}
+  .week-head{padding:8px 4px 2px;font-weight:800;font-size:.78rem;color:#8A7454;text-align:center}
+  .week-head .sp{text-align:left}
+  .week-row{padding:7px 4px;border-bottom:2px solid #F6EBD7}
+  .week-row .w-words{display:flex;align-items:center;gap:10px;min-width:0}
+  .week-row .pic{font-size:1.45rem;width:42px;height:42px;background:var(--c-soft);border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
+  .week-row .en{font-weight:800;font-size:.95rem;line-height:1.2}
+  .week-row .hi{font-weight:700;color:#8A7454;font-size:.8rem;line-height:1.25}
+  .daytick{width:40px;height:40px;border:2.5px solid var(--c-accent);border-radius:50%;background:#fff;color:var(--c-accent);font-size:1.05rem;font-weight:900;padding:0}
+  .daytick.tick-on{background:var(--c-accent);color:#fff}
+  @media (max-width:560px){
+    .week-head,.week-row{grid-template-columns:1fr repeat(7,32px);gap:3px}
+    .daytick{width:32px;height:32px;font-size:.85rem}
+    .week-row .pic{width:36px;height:36px;font-size:1.2rem}
+    .week-row .en{font-size:.85rem}.week-row .hi{font-size:.72rem}
+    .chart{padding:18px 14px 14px}
+  }
+  .chart-foot{margin-top:14px;text-align:center;color:#8A7454;font-weight:700;font-size:.82rem}
+  .chart-foot b{color:var(--c-deep)}
+
+  /* ---------- Info sections ---------- */
+  .info{margin-top:34px}
+  .info h2{font-size:1.5rem;font-weight:800}
+  .tips{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  @media (max-width:820px){.tips{grid-template-columns:1fr}}
+  .tip{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px}
+  .tip h3{font-size:1.05rem;font-weight:800;margin-bottom:6px}
+  .tip p{margin:0;color:var(--ink-soft);font-size:.93rem}
+  .read-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  @media (max-width:820px){.read-grid{grid-template-columns:1fr}}
+  .read-card{display:block;text-decoration:none;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px;color:var(--ink)}
+  .read-card h3{font-size:1.02rem;font-weight:800;margin-bottom:5px}
+  .read-card p{margin:0;color:var(--ink-soft);font-size:.9rem}
+  .read-card .go{color:var(--accent);font-weight:800;font-size:.88rem;display:inline-block;margin-top:8px}
+  .pack-banner{margin-top:22px;background:var(--teal-soft);border:1.5px solid var(--teal);border-radius:18px;padding:20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+  .pack-banner h3{font-size:1.15rem;font-weight:800}
+  .pack-banner p{margin:4px 0 0;color:var(--ink-soft);font-size:.93rem;max-width:560px}
+  footer{margin-top:36px;text-align:center;color:var(--ink-soft);font-size:.85rem}
+  footer a{color:var(--accent);font-weight:700}
+
+  @media print{
+    @page{size:letter;margin:.45in}
+    body{background:#fff}
+    .no-print{display:none !important}
+    .wrap{max-width:none;padding:0}
+    .layout{display:block;margin:0}
+    .preview-col{position:static}
+    .chart{box-shadow:none;border:2px solid var(--c-soft);border-radius:14px;padding:18px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero no-print">
+    <h1>Routine Chart Maker <span class="hl">— in 12 languages</span></h1>
+    <p>Build a picture routine chart for your toddler in the languages your family speaks — English, हिन्दी, Español, தமிழ் and 8 more. Pick the steps, add your child's name, tick them off on screen together — then print it for the fridge or bedroom wall. Made for families everywhere: India, the USA, the Gulf, Europe and beyond.</p>
+    <div class="badges">
+      <span class="badge">12 languages on every step</span>
+      <span class="badge">Prints on US Letter</span>
+      <span class="badge">Daily or full-week chart</span>
+      <span class="badge">Free — no sign-up</span>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- ============ CONTROLS ============ -->
+    <div class="no-print">
+      <section class="panel" aria-label="Chart settings">
+        <h2>1 · Make it yours</h2>
+        <p class="sub">Your child's name goes right on the chart — in the languages your family speaks.</p>
+
+        <label class="flabel" for="kidName">Child's name / बच्चे का नाम</label>
+        <input type="text" id="kidName" placeholder="e.g. Aarav" maxlength="24" autocomplete="off" />
+
+        <label class="flabel">Chart type</label>
+        <div class="seg" id="typeSeg" role="group" aria-label="Chart type">
+          <button type="button" data-type="morning" class="on">☀️ Morning · सुबह</button>
+          <button type="button" data-type="bedtime">🌙 Bedtime · सोने का समय</button>
+        </div>
+
+        <div class="lang-grid">
+          <div>
+            <label class="flabel" for="lang1Sel">Chart language</label>
+            <select id="lang1Sel" aria-label="Chart language"></select>
+          </div>
+          <div>
+            <label class="flabel" for="lang2Sel">Second language</label>
+            <select id="lang2Sel" aria-label="Second language (optional)"></select>
+          </div>
+        </div>
+
+        <label class="flabel">Chart style</label>
+        <div class="seg" id="modeSeg" role="group" aria-label="Chart style">
+          <button type="button" data-mode="daily" class="on">Daily — one big tick</button>
+          <button type="button" data-mode="weekly">Weekly — Sun to Sat</button>
+        </div>
+
+        <label class="flabel">Colour theme</label>
+        <div class="themes" id="themeRow">
+          <button type="button" class="theme-btn on" data-theme="sunshine" aria-label="Sunshine orange"><span style="background:#E8760B"></span></button>
+          <button type="button" class="theme-btn" data-theme="sky" aria-label="Sky blue"><span style="background:#1D7FC4"></span></button>
+          <button type="button" class="theme-btn" data-theme="mint" aria-label="Mint green"><span style="background:#1E9E6A"></span></button>
+          <button type="button" class="theme-btn" data-theme="berry" aria-label="Berry pink"><span style="background:#D64E7E"></span></button>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Choose steps">
+        <h2>2 · Pick the steps</h2>
+        <p class="sub">Tap to add or remove. Up to 10 steps fit nicely on one page. <span id="stepCount"></span></p>
+        <div class="lib" id="library"></div>
+
+        <label class="flabel" for="customText">Add your own step</label>
+        <div class="custom-row">
+          <input type="text" id="customText" placeholder="e.g. Feed the fish" maxlength="40" autocomplete="off" />
+          <button type="button" class="btn btn-teal" id="addCustom">Add</button>
+        </div>
+        <div class="icon-pick" id="iconPick" aria-label="Pick a picture for your step"></div>
+      </section>
+
+      <section class="panel" aria-label="Your steps in order">
+        <h2>3 · Order &amp; tidy up</h2>
+        <p class="sub">Steps print top to bottom, in this order.</p>
+        <ul class="sel-list" id="selList"></ul>
+        <p class="empty-note" id="selEmpty" hidden>No steps yet — pick some above.</p>
+      </section>
+    </div>
+
+    <!-- ============ PREVIEW ============ -->
+    <div class="preview-col">
+      <div class="actions no-print">
+        <button type="button" class="btn btn-accent" id="downloadBtn">⬇ Download chart (PNG)</button>
+        <button type="button" class="btn btn-ghost" id="resetBtn">↺ Clear all ticks</button>
+      </div>
+
+      <div class="chart" id="chart" data-theme="sunshine">
+        <div class="chart-head">
+          <div class="sun" id="chartIcon">☀️</div>
+          <div>
+            <h2 id="chartTitle" dir="auto">My Morning Routine · मेरी सुबह की दिनचर्या</h2>
+            <div class="kid" id="chartKid">My Chart</div>
+            <div class="kid-hi" id="chartKidSub" dir="auto">Tick each step when it's done · हर काम पूरा करके टिक करो</div>
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="ptext"><span id="pText">0 of 0 done</span><span class="stars" id="pStars" aria-hidden="true"></span></div>
+          <div class="pbar"><i id="pFill"></i></div>
+          <div class="celebrate" id="celebrate">🎉 All done! Shabash! · सब हो गया! शाबाश!</div>
+        </div>
+
+        <div id="chartBody"></div>
+
+        <div class="chart-foot">Made with love by <b>Good Morning Kids</b> · goodmorningkidsrhymes.blogspot.com</div>
+      </div>
+      <p class="no-print" style="color:var(--ink-soft);font-size:.85rem;margin-top:10px">Download the PNG, then print it from your phone or computer at <b>US Letter</b> size — it is made to fill the page. Or keep it on a tablet and tick the steps on screen every day.</p>
+    </div>
+  </div>
+
+  <!-- ============ INFO ============ -->
+  <section class="info no-print">
+    <h2>Why a routine chart in your own language works</h2>
+    <div class="tips">
+      <div class="tip">
+        <h3>Pictures first, words second</h3>
+        <p>Toddlers “read” the picture and follow the order themselves — no nagging. The words underneath quietly build reading readiness in two languages at once.</p>
+      </div>
+      <div class="tip">
+        <h3>Your home language stays alive</h3>
+        <p>Daily words in your own language — दाँत साफ़ करो, Cepíllate los dientes, பல் துலக்கு — keep your mother tongue part of everyday life for kids growing up anywhere in the world, not just a weekend lesson.</p>
+      </div>
+      <div class="tip">
+        <h3>Tick it together</h3>
+        <p>Use the weekly style and let your child tick each day. A full row of ticks by Saturday is a reward in itself — add a sticker or a high-five for a finished week.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:30px">Read more on the Good Morning Kids blog</h2>
+    <div class="read-grid">
+      <a class="read-card" href="https://goodmorningkidsrhymes.blogspot.com/2026/11/good-morning-routine-for-toddlers-free.html" target="_blank" rel="noopener">
+        <h3>Good Morning Routine for Toddlers</h3>
+        <p>The full morning routine guide, with a free sample of the 20-page printable pack.</p>
+        <span class="go">Read the post →</span>
+      </a>
+      <a class="read-card" href="https://goodmorningkidsrhymes.blogspot.com/2026/11/bedtime-routine-for-toddlers-sleep-well.html" target="_blank" rel="noopener">
+        <h3>Bedtime Routine for Toddlers</h3>
+        <p>Sleep well, wake happy — a calm bedtime sequence that pairs with the bedtime chart.</p>
+        <span class="go">Read the post →</span>
+      </a>
+      <a class="read-card" href="https://goodmorningkidsrhymes.blogspot.com/2026/11/how-to-teach-toddlers-to-brush-teeth.html" target="_blank" rel="noopener">
+        <h3>How to Teach Toddlers to Brush Teeth</h3>
+        <p>Simple tricks that turn the hardest step on the chart into the favourite one.</p>
+        <span class="go">Read the post →</span>
+      </a>
+    </div>
+
+    <div class="pack-banner">
+      <div>
+        <h3>Want the full 20-page printable pack?</h3>
+        <p>Morning routine chart, Hindi + English rhymes, swar–vyanjan tracing, numbers, shapes, colours and colouring pages for ages 3–5 — ₹149 launch price.</p>
+      </div>
+      <a class="btn btn-teal" href="https://goodmorningkidsrhymes.blogspot.com/2026/11/good-morning-kids-shop-bachon-ke-sare.html" target="_blank" rel="noopener" style="text-decoration:none">See the pack →</a>
+    </div>
+  </section>
+
+  <footer class="no-print">
+    Good Morning Kids · Hindi + English toddler printables · <a href="https://goodmorningkidsrhymes.blogspot.com" target="_blank" rel="noopener">goodmorningkidsrhymes.blogspot.com</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var LANGS = [
+    {code:"en", name:"English"},
+    {code:"hi", name:"हिन्दी · Hindi"},
+    {code:"es", name:"Español · Spanish"},
+    {code:"fr", name:"Français · French"},
+    {code:"de", name:"Deutsch · German"},
+    {code:"pt", name:"Português · Portuguese"},
+    {code:"ar", name:"العربية · Arabic"},
+    {code:"zh", name:"中文 · Chinese"},
+    {code:"ta", name:"தமிழ் · Tamil"},
+    {code:"te", name:"తెలుగు · Telugu"},
+    {code:"bn", name:"বাংলা · Bengali"},
+    {code:"ur", name:"اردو · Urdu"}
+  ];
+
+  var TITLES = {
+    en:{m:"My Morning Routine", b:"My Bedtime Routine", sub:"Tick each step when it's done", my:"My Chart", sfx:"'s Chart"},
+    hi:{m:"मेरी सुबह की दिनचर्या", b:"मेरी सोने की दिनचर्या", sub:"हर काम पूरा करके टिक करो", my:"मेरा चार्ट", sfx:" का चार्ट"},
+    es:{m:"Mi rutina de la mañana", b:"Mi rutina de la noche", sub:"Marca cada paso al terminar", my:"Mi tabla", pre:"Tabla de "},
+    fr:{m:"Ma routine du matin", b:"Ma routine du soir", sub:"Coche chaque étape terminée", my:"Mon tableau", pre:"Tableau de "},
+    de:{m:"Meine Morgenroutine", b:"Meine Abendroutine", sub:"Hake jeden fertigen Schritt ab", my:"Meine Tabelle", sfx:"s Tabelle"},
+    pt:{m:"Minha rotina da manhã", b:"Minha rotina da noite", sub:"Marque cada passo ao terminar", my:"Meu quadro", pre:"Quadro de "},
+    ar:{m:"روتيني الصباحي", b:"روتيني المسائي", sub:"ضع علامة على كل خطوة منجزة", my:"جدولي", pre:"جدول "},
+    zh:{m:"我的晨间作息", b:"我的睡前作息", sub:"完成每一步就打勾", my:"我的作息表", sfx:"的作息表"},
+    ta:{m:"என் காலை வழக்கம்", b:"என் இரவு வழக்கம்", sub:"முடிந்த ஒவ்வொரு படியையும் டிக் செய்", my:"என் அட்டவணை", sfx:" அட்டவணை"},
+    te:{m:"నా ఉదయ దినచర్య", b:"నా రాత్రి దినచర్య", sub:"పూర్తయిన ప్రతి పనికి టిక్ చేయి", my:"నా చార్ట్", sfx:" చార్ట్"},
+    bn:{m:"আমার সকালের রুটিন", b:"আমার রাতের রুটিন", sub:"প্রতিটি কাজ শেষ হলে টিক দাও", my:"আমার চার্ট", sfx:"-এর চার্ট"},
+    ur:{m:"میرا صبح کا معمول", b:"میرا سونے کا معمول", sub:"ہر کام مکمل کر کے ٹک کرو", my:"میرا چارٹ", sfx:" کا چارٹ"}
+  };
+  var STEPW = {en:"Step", hi:"काम", es:"Paso", fr:"Étape", de:"Schritt", pt:"Passo", ar:"خطوة", zh:"步骤", ta:"படி", te:"పని", bn:"ধাপ", ur:"قدم"};
+
+  var LIBRARY = {
+    morning: [
+      {id:"wake",   pic:"🌅", en:"Wake Up",            hi:"उठ जाओ", t:{es:"Despertarse", fr:"Se réveiller", de:"Aufwachen", pt:"Acordar", ar:"الاستيقاظ", zh:"起床", ta:"எழுந்திரு", te:"లేవండి", bn:"ঘুম থেকে ওঠো", ur:"جاگو"}},
+      {id:"potty",  pic:"🚽", en:"Use the Potty",      hi:"पॉटी करो", t:{es:"Ir al baño", fr:"Aller aux toilettes", de:"Aufs Töpfchen", pt:"Usar o penico", ar:"استخدام الحمام", zh:"上厕所", ta:"கழிப்பறைக்குச் செல்", te:"బాత్రూమ్‌కి వెళ్ళు", bn:"পটিতে বসো", ur:"باتھ روم جاؤ"}},
+      {id:"brush",  pic:"🪥", en:"Brush Teeth",        hi:"दाँत साफ़ करो", t:{es:"Cepillarse los dientes", fr:"Se brosser les dents", de:"Zähne putzen", pt:"Escovar os dentes", ar:"تنظيف الأسنان", zh:"刷牙", ta:"பல் துலக்கு", te:"పళ్ళు తోముకో", bn:"দাঁত ব্রাশ করো", ur:"دانت صاف کرو"}},
+      {id:"wash",   pic:"🧼", en:"Wash Face & Hands",  hi:"मुँह-हाथ धोओ", t:{es:"Lavarse cara y manos", fr:"Se laver visage et mains", de:"Gesicht & Hände waschen", pt:"Lavar rosto e mãos", ar:"غسل الوجه واليدين", zh:"洗脸洗手", ta:"முகம், கை கழுவு", te:"ముఖం, చేతులు కడుక్కో", bn:"মুখ ও হাত ধোও", ur:"منہ ہاتھ دھوؤ"}},
+      {id:"bath",   pic:"🛁", en:"Take a Bath",        hi:"नहा लो", t:{es:"Bañarse", fr:"Prendre un bain", de:"Baden", pt:"Tomar banho", ar:"الاستحمام", zh:"洗澡", ta:"குளி", te:"స్నానం చేయి", bn:"স্নান করো", ur:"نہاؤ"}},
+      {id:"dress",  pic:"👕", en:"Get Dressed",        hi:"कपड़े पहनो", t:{es:"Vestirse", fr:"S'habiller", de:"Sich anziehen", pt:"Vestir-se", ar:"ارتداء الملابس", zh:"穿衣服", ta:"உடை அணி", te:"బట్టలు వేసుకో", bn:"জামা পরো", ur:"کپڑے پہنو"}},
+      {id:"hair",   pic:"🪮", en:"Comb Hair",          hi:"बाल बनाओ", t:{es:"Peinarse", fr:"Se coiffer", de:"Haare kämmen", pt:"Pentear o cabelo", ar:"تمشيط الشعر", zh:"梳头", ta:"தலை வாரு", te:"జుట్టు దువ్వుకో", bn:"চুল আঁচড়াও", ur:"بال بناؤ"}},
+      {id:"breakfast", pic:"🍽️", en:"Eat Breakfast",   hi:"नाश्ता करो", t:{es:"Desayunar", fr:"Petit-déjeuner", de:"Frühstücken", pt:"Café da manhã", ar:"تناول الإفطار", zh:"吃早餐", ta:"காலை உணவு சாப்பிடு", te:"అల్పాహారం తిను", bn:"নাস্তা খাও", ur:"ناشتہ کرو"}},
+      {id:"milk",   pic:"🥛", en:"Drink Milk",         hi:"दूध पियो", t:{es:"Tomar leche", fr:"Boire du lait", de:"Milch trinken", pt:"Beber leite", ar:"شرب الحليب", zh:"喝牛奶", ta:"பால் குடி", te:"పాలు తాగు", bn:"দুধ খাও", ur:"دودھ پیو"}},
+      {id:"bag",    pic:"🎒", en:"Pack School Bag",    hi:"बैग तैयार करो", t:{es:"Preparar la mochila", fr:"Préparer son sac", de:"Schultasche packen", pt:"Arrumar a mochila", ar:"تجهيز الحقيبة", zh:"整理书包", ta:"பள்ளிப் பை தயார் செய்", te:"స్కూల్ బ్యాగ్ సిద్ధం చేయి", bn:"স্কুল ব্যাগ গুছাও", ur:"بیگ تیار کرو"}},
+      {id:"shoes",  pic:"👟", en:"Put On Shoes",       hi:"जूते पहनो", t:{es:"Ponerse los zapatos", fr:"Mettre ses chaussures", de:"Schuhe anziehen", pt:"Calçar os sapatos", ar:"ارتداء الحذاء", zh:"穿鞋子", ta:"காலணி அணி", te:"చెప్పులు వేసుకో", bn:"জুতো পরো", ur:"جوتے پہنو"}},
+      {id:"school", pic:"🏫", en:"Go to School",       hi:"स्कूल जाओ", t:{es:"Ir a la escuela", fr:"Aller à l'école", de:"Zur Schule gehen", pt:"Ir para a escola", ar:"الذهاب إلى المدرسة", zh:"去上学", ta:"பள்ளிக்குச் செல்", te:"స్కూల్‌కి వెళ్ళు", bn:"স্কুলে যাও", ur:"اسکول جاؤ"}},
+      {id:"namaste",pic:"🙏", en:"Say Namaste",        hi:"नमस्ते करो", t:{es:"Saludar", fr:"Dire bonjour", de:"Alle begrüßen", pt:"Cumprimentar", ar:"إلقاء التحية", zh:"向大家问好", ta:"வணக்கம் சொல்", te:"నమస్కారం చెప్పు", bn:"নমস্কার করো", ur:"سلام کرو"}},
+      {id:"tidy",   pic:"🧸", en:"Tidy Up Toys",       hi:"खिलौने समेटो", t:{es:"Recoger los juguetes", fr:"Ranger les jouets", de:"Spielzeug aufräumen", pt:"Guardar os brinquedos", ar:"ترتيب الألعاب", zh:"收拾玩具", ta:"பொம்மைகளை ஒழுங்குபடுத்து", te:"బొమ్మలు సర్దు", bn:"খেলনা গুছাও", ur:"کھلونے سمیٹو"}}
+    ],
+    bedtime: [
+      {id:"dinner", pic:"🍲", en:"Eat Dinner",         hi:"खाना खाओ", t:{es:"Cenar", fr:"Dîner", de:"Abendessen", pt:"Jantar", ar:"تناول العشاء", zh:"吃晚餐", ta:"இரவு உணவு சாப்பிடு", te:"రాత్రి భోజనం తిను", bn:"রাতের খাবার খাও", ur:"کھانا کھاؤ"}},
+      {id:"bwater", pic:"💧", en:"Drink Water",        hi:"पानी पियो", t:{es:"Beber agua", fr:"Boire de l'eau", de:"Wasser trinken", pt:"Beber água", ar:"شرب الماء", zh:"喝水", ta:"தண்ணீர் குடி", te:"నీళ్ళు తాగు", bn:"পানি খাও", ur:"پانی پیو"}},
+      {id:"bbath",  pic:"🛁", en:"Take a Bath",        hi:"नहा लो", t:{es:"Bañarse", fr:"Prendre un bain", de:"Baden", pt:"Tomar banho", ar:"الاستحمام", zh:"洗澡", ta:"குளி", te:"స్నానం చేయి", bn:"স্নান করো", ur:"نہاؤ"}},
+      {id:"pyjama", pic:"🌜", en:"Wear Pyjamas",       hi:"पायजामा पहनो", t:{es:"Ponerse el pijama", fr:"Mettre son pyjama", de:"Schlafanzug anziehen", pt:"Vestir o pijama", ar:"ارتداء البيجامة", zh:"穿睡衣", ta:"இரவு உடை அணி", te:"పైజామా వేసుకో", bn:"পায়জামা পরো", ur:"پاجامہ پہنو"}},
+      {id:"bbrush", pic:"🪥", en:"Brush Teeth",        hi:"दाँत साफ़ करो", t:{es:"Cepillarse los dientes", fr:"Se brosser les dents", de:"Zähne putzen", pt:"Escovar os dentes", ar:"تنظيف الأسنان", zh:"刷牙", ta:"பல் துலக்கு", te:"పళ్ళు తోముకో", bn:"দাঁত ব্রাশ করো", ur:"دانت صاف کرو"}},
+      {id:"story",  pic:"📖", en:"Story Time",         hi:"कहानी सुनो", t:{es:"Hora del cuento", fr:"L'heure du conte", de:"Geschichte anhören", pt:"Hora da história", ar:"وقت القصة", zh:"听故事", ta:"கதை கேள்", te:"కథ విను", bn:"গল্প শোনো", ur:"کہانی سنو"}},
+      {id:"prayer", pic:"🙏", en:"Say a Prayer",       hi:"प्रार्थना करो", t:{es:"Rezar", fr:"Faire une prière", de:"Beten", pt:"Fazer uma oração", ar:"الدعاء", zh:"祷告", ta:"பிரார்த்தனை செய்", te:"ప్రార్థన చేయి", bn:"প্রার্থনা করো", ur:"دعا کرو"}},
+      {id:"hug",    pic:"🤗", en:"Hug & Goodnight Kiss", hi:"गले लगो", t:{es:"Abrazo de buenas noches", fr:"Câlin de bonne nuit", de:"Gute-Nacht-Umarmung", pt:"Abraço de boa-noite", ar:"حضن قبل النوم", zh:"晚安拥抱", ta:"கட்டிப்பிடித்து தூங்கு", te:"హత్తుకుని పడుకో", bn:"জড়িয়ে ধরে ঘুমাও", ur:"گلے لگ کر سوؤ"}},
+      {id:"lights", pic:"💡", en:"Lights Off",         hi:"बत्ती बंद करो", t:{es:"Apagar las luces", fr:"Éteindre les lumières", de:"Licht ausmachen", pt:"Apagar as luzes", ar:"إطفاء الأنوار", zh:"关灯", ta:"விளக்கை அணை", te:"లైట్లు ఆపేయి", bn:"বাতি নিভাও", ur:"بتی بند کرو"}},
+      {id:"sleep",  pic:"😴", en:"Sleep Tight",        hi:"सो जाओ", t:{es:"A dormir", fr:"Dormir", de:"Schlafen", pt:"Dormir", ar:"النوم", zh:"睡觉", ta:"தூங்கு", te:"నిద్రపో", bn:"ঘুমাও", ur:"سو جاؤ"}}
+    ]
+  };
+  var DEFAULTS = {
+    morning: ["wake","brush","wash","bath","dress","breakfast","bag","school"],
+    bedtime: ["dinner","bbath","pyjama","bbrush","story","prayer","sleep"]
+  };
+  var CUSTOM_ICONS = ["⭐","🐶","🐱","🦁","🐠","🚗","⚽","🎨","📚","🍎","🌻","🚲"];
+  var DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var MAX = 10;
+
+  var state = {
+    type: "morning",
+    lang1: "en",
+    lang2: "hi",
+    mode: "daily",
+    theme: "sunshine",
+    name: "",
+    steps: [],          // array of step objects
+    ticks: {},          // key: stepIndex or stepIndex-dayIndex -> true
+    customIcon: CUSTOM_ICONS[0]
+  };
+
+  function txt(s, code){
+    if (!code) return "";
+    if (code === "en") return s.en;
+    if (code === "hi") return s.hi || s.en;
+    return (s.t && s.t[code]) || s.en;
+  }
+  function subCode(){
+    return state.lang2 ? state.lang2 : (state.lang1 !== "en" ? state.lang1 : null);
+  }
+  function kidText(code){
+    var T = TITLES[code] || TITLES.en;
+    if (!state.name) return T.my;
+    return T.pre ? T.pre + state.name : state.name + (T.sfx || "'s Chart");
+  }
+
+  function findStep(type, id){
+    var lib = LIBRARY[type];
+    for (var i=0;i<lib.length;i++) if (lib[i].id===id) return lib[i];
+    return null;
+  }
+  function loadDefaults(type){
+    state.steps = DEFAULTS[type].map(function(id){
+      var s = findStep(type,id); return {pic:s.pic, en:s.en, hi:s.hi, t:s.t};
+    });
+    state.ticks = {};
+  }
+  loadDefaults("morning");
+
+  var $ = function(id){ return document.getElementById(id); };
+  var libraryEl=$("library"), selListEl=$("selList"), chartBody=$("chartBody");
+
+  /* ---------- language selects ---------- */
+  (function buildLangs(){
+    var s1 = $("lang1Sel"), s2 = $("lang2Sel");
+    LANGS.forEach(function(L){
+      var o1 = document.createElement("option"); o1.value = L.code; o1.textContent = L.name; s1.appendChild(o1);
+      var o2 = document.createElement("option"); o2.value = L.code; o2.textContent = L.name; s2.appendChild(o2);
+    });
+    var none = document.createElement("option"); none.value = ""; none.textContent = "None";
+    s2.insertBefore(none, s2.firstChild);
+    s1.value = state.lang1; s2.value = state.lang2;
+    s1.addEventListener("change", function(){
+      state.lang1 = s1.value;
+      if (state.lang2 === state.lang1) state.lang2 = "";
+      s2.value = state.lang2;
+      renderAll();
+    });
+    s2.addEventListener("change", function(){
+      state.lang2 = s2.value === state.lang1 ? "" : s2.value;
+      s2.value = state.lang2;
+      renderAll();
+    });
+  })();
+
+  /* ---------- segmented controls ---------- */
+  function segWire(id, attr, fn){
+    $(id).addEventListener("click", function(e){
+      var b = e.target.closest("button"); if(!b) return;
+      var btns = $(id).querySelectorAll("button");
+      for (var i=0;i<btns.length;i++) btns[i].classList.remove("on");
+      b.classList.add("on");
+      fn(b.getAttribute(attr));
+    });
+  }
+  segWire("typeSeg","data-type",function(v){
+    state.type=v; loadDefaults(v); renderAll();
+  });
+  segWire("modeSeg","data-mode",function(v){ state.mode=v; state.ticks={}; renderChart(); });
+
+  $("themeRow").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    var btns = $("themeRow").querySelectorAll("button");
+    for (var i=0;i<btns.length;i++) btns[i].classList.remove("on");
+    b.classList.add("on");
+    state.theme = b.getAttribute("data-theme");
+    $("chart").setAttribute("data-theme", state.theme);
+  });
+
+  $("kidName").addEventListener("input", function(e){
+    state.name = e.target.value.trim();
+    renderChartHead();
+  });
+
+  /* ---------- library ---------- */
+  function renderLibrary(){
+    libraryEl.innerHTML = "";
+    var sc = subCode();
+    LIBRARY[state.type].forEach(function(s){
+      var chosen = state.steps.some(function(x){ return x.en===s.en && x.pic===s.pic; });
+      var b = document.createElement("button");
+      b.type="button"; b.className = "lib-btn" + (chosen ? " on" : "");
+      b.disabled = !chosen && state.steps.length>=MAX;
+      var sub = sc ? txt(s, sc) : "";
+      b.innerHTML = '<span class="pic">'+s.pic+'</span><span>'+s.en+(sub && sub!==s.en ? '<span class="hi" dir="auto">'+escapeHTML(sub)+'</span>' : '')+'</span><span class="tick">✓</span>';
+      b.addEventListener("click", function(){
+        var idx = -1;
+        state.steps.forEach(function(x,i){ if(x.en===s.en && x.pic===s.pic) idx=i; });
+        if (idx>=0){ state.steps.splice(idx,1); }
+        else if (state.steps.length<MAX){ state.steps.push({pic:s.pic,en:s.en,hi:s.hi,t:s.t}); }
+        state.ticks={};
+        renderAll();
+      });
+      libraryEl.appendChild(b);
+    });
+    $("stepCount").textContent = "(" + state.steps.length + " of " + MAX + " chosen)";
+  }
+
+  /* ---------- custom step ---------- */
+  var iconPick = $("iconPick");
+  CUSTOM_ICONS.forEach(function(ic){
+    var b=document.createElement("button");
+    b.type="button"; b.textContent=ic;
+    if (ic===state.customIcon) b.className="on";
+    b.setAttribute("aria-label","Picture "+ic);
+    b.addEventListener("click", function(){
+      state.customIcon=ic;
+      var btns=iconPick.querySelectorAll("button");
+      for (var i=0;i<btns.length;i++) btns[i].classList.remove("on");
+      b.classList.add("on");
+    });
+    iconPick.appendChild(b);
+  });
+  function addCustom(){
+    var t = $("customText").value.trim();
+    if (!t || state.steps.length>=MAX) return;
+    state.steps.push({pic: state.customIcon, en: t, hi: ""});
+    $("customText").value="";
+    state.ticks={};
+    renderAll();
+  }
+  $("addCustom").addEventListener("click", addCustom);
+  $("customText").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); addCustom(); } });
+
+  /* ---------- selected list ---------- */
+  function renderSelList(){
+    selListEl.innerHTML="";
+    $("selEmpty").hidden = state.steps.length>0;
+    var sc = subCode();
+    state.steps.forEach(function(s,i){
+      var li=document.createElement("li");
+      var sub = sc ? txt(s, sc) : "";
+      var label = s.en + (sub && sub!==s.en ? " · "+sub : "");
+      li.innerHTML = '<span class="pic">'+s.pic+'</span><span dir="auto">'+escapeHTML(label)+'</span>';
+      var mini=document.createElement("span"); mini.className="mini";
+      function mk(txt2, label2, fn){
+        var b=document.createElement("button"); b.type="button"; b.textContent=txt2;
+        b.setAttribute("aria-label", label2+" "+s.en);
+        b.addEventListener("click", fn); return b;
+      }
+      mini.appendChild(mk("↑","Move up", function(){
+        if(i>0){ var t=state.steps[i-1]; state.steps[i-1]=state.steps[i]; state.steps[i]=t; state.ticks={}; renderAll(); }
+      }));
+      mini.appendChild(mk("↓","Move down", function(){
+        if(i<state.steps.length-1){ var t=state.steps[i+1]; state.steps[i+1]=state.steps[i]; state.steps[i]=t; state.ticks={}; renderAll(); }
+      }));
+      mini.appendChild(mk("✕","Remove", function(){
+        state.steps.splice(i,1); state.ticks={}; renderAll();
+      }));
+      li.appendChild(mini);
+      selListEl.appendChild(li);
+    });
+  }
+
+  /* ---------- chart ---------- */
+  function renderChartHead(){
+    var morning = state.type==="morning";
+    var T1 = TITLES[state.lang1], T2 = state.lang2 ? TITLES[state.lang2] : null;
+    $("chartIcon").textContent = morning ? "☀️" : "🌙";
+    var t1 = morning ? T1.m : T1.b;
+    $("chartTitle").textContent = T2 ? t1 + " · " + (morning ? T2.m : T2.b) : t1;
+    $("chartKid").textContent = kidText(state.lang1);
+    $("chartKidSub").textContent = T2 ? T1.sub + " · " + T2.sub : T1.sub;
+  }
+
+  function wordsHTML(s){
+    var p = txt(s, state.lang1);
+    var sec = state.lang2 ? txt(s, state.lang2) : "";
+    var h = '<div class="en" dir="auto">'+escapeHTML(p)+'</div>';
+    if (sec && sec !== p) h += '<div class="hi" dir="auto">'+escapeHTML(sec)+'</div>';
+    return h;
+  }
+  function escapeHTML(t){
+    return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function totalCells(){
+    return state.mode==="weekly" ? state.steps.length*7 : state.steps.length;
+  }
+  function doneCells(){
+    var n=0; for (var k in state.ticks) if (state.ticks[k]) n++;
+    return n;
+  }
+  function renderProgress(){
+    var total=totalCells(), done=doneCells();
+    $("pText").textContent = total===0 ? "Pick some steps to start" : done + " of " + total + " done";
+    $("pFill").style.width = total ? Math.round(done/total*100)+"%" : "0%";
+    var stars="";
+    if (state.mode==="daily" && total>0){
+      for (var i=0;i<total;i++) stars += (i<done ? "★" : "☆");
+    } else if (total>0){
+      var full = Math.floor(done/ Math.max(1,state.steps.length));
+      for (var j=0;j<7;j++) stars += (j<full ? "★" : "☆");
+    }
+    $("pStars").textContent = stars;
+    $("celebrate").classList.toggle("show", total>0 && done===total);
+  }
+
+  function renderChart(){
+    renderChartHead();
+    chartBody.innerHTML="";
+    if (state.mode==="daily"){
+      var ul=document.createElement("ul"); ul.className="steps";
+      state.steps.forEach(function(s,i){
+        var li=document.createElement("li");
+        li.className="step" + (state.ticks[i] ? " done" : "");
+        li.innerHTML = '<span class="num">'+(i+1)+'</span><span class="pic">'+s.pic+'</span><span class="words">'+wordsHTML(s)+'</span>';
+        var tb=document.createElement("button");
+        tb.type="button"; tb.className="tickbox" + (state.ticks[i] ? " tick-on" : "");
+        tb.textContent = state.ticks[i] ? "✓" : "";
+        tb.setAttribute("aria-label","Tick "+s.en);
+        tb.setAttribute("aria-pressed", state.ticks[i] ? "true" : "false");
+        tb.addEventListener("click", function(){
+          state.ticks[i] = !state.ticks[i];
+          renderChart();
+        });
+        li.appendChild(tb);
+        ul.appendChild(li);
+      });
+      chartBody.appendChild(ul);
+    } else {
+      var head=document.createElement("div"); head.className="week-head";
+      var hw = STEPW[state.lang1] + (state.lang2 ? " · " + STEPW[state.lang2] : "");
+      head.innerHTML = '<span class="sp" dir="auto">'+escapeHTML(hw)+'</span>' + DAYS.map(function(d){ return "<span>"+d+"</span>"; }).join("");
+      chartBody.appendChild(head);
+      state.steps.forEach(function(s,i){
+        var row=document.createElement("div"); row.className="week-row";
+        var w=document.createElement("div"); w.className="w-words";
+        w.innerHTML = '<span class="pic">'+s.pic+'</span><span>'+wordsHTML(s)+'</span>';
+        row.appendChild(w);
+        DAYS.forEach(function(d,di){
+          var key=i+"-"+di;
+          var b=document.createElement("button");
+          b.type="button"; b.className="daytick" + (state.ticks[key] ? " tick-on" : "");
+          b.textContent = state.ticks[key] ? "✓" : "";
+          b.setAttribute("aria-label","Tick "+s.en+" on "+d);
+          b.setAttribute("aria-pressed", state.ticks[key] ? "true" : "false");
+          b.addEventListener("click", function(){
+            state.ticks[key] = !state.ticks[key];
+            renderChart();
+          });
+          row.appendChild(b);
+        });
+        chartBody.appendChild(row);
+      });
+    }
+    renderProgress();
+  }
+
+  function renderAll(){ renderLibrary(); renderSelList(); renderChart(); }
+
+  $("resetBtn").addEventListener("click", function(){ state.ticks={}; renderChart(); });
+
+  /* ---------- download chart as PNG (US Letter ratio) ---------- */
+  var THEME_HEX = {
+    sunshine:{accent:"#E8760B", soft:"#FFF1D6", deep:"#B85A05"},
+    sky:{accent:"#1D7FC4", soft:"#E1F1FC", deep:"#155E91"},
+    mint:{accent:"#1E9E6A", soft:"#DFF6EA", deep:"#14704B"},
+    berry:{accent:"#D64E7E", soft:"#FDE4EE", deep:"#A93360"}
+  };
+  function rr(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+  $("downloadBtn").addEventListener("click", function(){
+    var T = THEME_HEX[state.theme];
+    var W = 1700, pad = 90, weekly = state.mode==="weekly";
+    var headH = 300, footH = 110;
+    var rowH = weekly ? 148 : 168;
+    var weekHeadH = weekly ? 70 : 0;
+    var H = pad + headH + weekHeadH + state.steps.length*rowH + footH + pad;
+    var cv = document.createElement("canvas");
+    cv.width = W; cv.height = H;
+    var c = cv.getContext("2d");
+    c.fillStyle = "#FFFFFF"; c.fillRect(0,0,W,H);
+    c.strokeStyle = T.soft; c.lineWidth = 10;
+    rr(c, 14, 14, W-28, H-28, 40); c.stroke();
+
+    var morning = state.type==="morning";
+    var T1 = TITLES[state.lang1], T2 = state.lang2 ? TITLES[state.lang2] : null;
+    var title1 = morning ? T1.m : T1.b;
+    var title2 = T2 ? (morning ? T2.m : T2.b) : "";
+
+    var y = pad;
+    // header icon circle
+    c.fillStyle = T.soft;
+    c.beginPath(); c.arc(pad+75, y+75, 75, 0, Math.PI*2); c.fill();
+    c.font = "84px serif"; c.textAlign = "center"; c.textBaseline = "middle";
+    c.fillText(morning ? "☀️" : "🌙", pad+75, y+82);
+    c.textAlign = "left";
+    c.fillStyle = T.deep;
+    var tx = pad + 185;
+    if (title2){
+      c.font = "800 62px 'Baloo 2','Nunito',sans-serif";
+      c.fillText(title1, tx, y+48);
+      c.font = "700 42px 'Nunito',sans-serif"; c.fillStyle = "#8A7454";
+      c.fillText(title2, tx, y+112);
+    } else {
+      c.font = "800 62px 'Baloo 2','Nunito',sans-serif";
+      c.fillText(title1, tx, y+70);
+    }
+    c.fillStyle = "#2E2418";
+    c.font = "800 50px 'Nunito',sans-serif";
+    c.fillText(kidText(state.lang1), tx, y+185);
+    c.font = "600 32px 'Nunito',sans-serif"; c.fillStyle = "#8A7454";
+    c.fillText(T2 ? T1.sub + " · " + T2.sub : T1.sub, tx, y+240);
+    y += headH;
+    // dashed divider
+    c.strokeStyle = T.soft; c.lineWidth = 5; c.setLineDash([16,12]);
+    c.beginPath(); c.moveTo(pad, y-28); c.lineTo(W-pad, y-28); c.stroke(); c.setLineDash([]);
+
+    var i, s, key, pTxt, sTxt, hasSec;
+    if (!weekly){
+      for (i=0;i<state.steps.length;i++){
+        s = state.steps[i];
+        pTxt = txt(s, state.lang1);
+        sTxt = state.lang2 ? txt(s, state.lang2) : "";
+        hasSec = !!(sTxt && sTxt !== pTxt);
+        var ry = y + i*rowH;
+        c.fillStyle = T.accent; c.font = "800 46px 'Baloo 2',sans-serif"; c.textAlign="center";
+        c.fillText(String(i+1), pad+30, ry+rowH/2);
+        c.textAlign="left";
+        c.fillStyle = T.soft; rr(c, pad+70, ry+22, 124, 124, 30); c.fill();
+        c.font = "76px serif"; c.textAlign="center";
+        c.fillText(s.pic, pad+132, ry+88); c.textAlign="left";
+        var wy = ry + (hasSec ? 62 : rowH/2);
+        c.fillStyle="#2E2418"; c.font="800 54px 'Nunito',sans-serif"; c.fillText(pTxt, pad+230, wy);
+        if (hasSec){ c.fillStyle="#8A7454"; c.font="700 44px 'Nunito',sans-serif"; c.fillText(sTxt, pad+230, wy + 62); }
+        // tick box
+        var bx = W-pad-104, by = ry + rowH/2 - 52;
+        if (state.ticks[i]){ c.fillStyle = T.accent; rr(c,bx,by,104,104,26); c.fill();
+          c.fillStyle="#fff"; c.font="900 64px 'Nunito',sans-serif"; c.textAlign="center"; c.fillText("✓", bx+52, by+56); c.textAlign="left";
+        } else { c.strokeStyle = T.accent; c.lineWidth = 7; rr(c,bx,by,104,104,26); c.stroke(); }
+        if (i < state.steps.length-1){ c.strokeStyle="#F6EBD7"; c.lineWidth=4; c.beginPath(); c.moveTo(pad, ry+rowH); c.lineTo(W-pad, ry+rowH); c.stroke(); }
+      }
+    } else {
+      var gridX = pad + 560, colW = (W - pad - gridX) / 7;
+      c.fillStyle = "#8A7454"; c.font = "800 32px 'Nunito',sans-serif"; c.textAlign="center";
+      for (i=0;i<7;i++) c.fillText(DAYS[i], gridX + colW*i + colW/2, y+30);
+      c.textAlign="left";
+      y += weekHeadH;
+      for (i=0;i<state.steps.length;i++){
+        s = state.steps[i];
+        pTxt = txt(s, state.lang1);
+        sTxt = state.lang2 ? txt(s, state.lang2) : "";
+        hasSec = !!(sTxt && sTxt !== pTxt);
+        var wy2 = y + i*rowH;
+        c.fillStyle = T.soft; rr(c, pad, wy2+16, 108, 108, 26); c.fill();
+        c.font = "62px serif"; c.textAlign="center"; c.fillText(s.pic, pad+54, wy2+72); c.textAlign="left";
+        var ty = wy2 + (hasSec ? 52 : rowH/2);
+        c.fillStyle="#2E2418"; c.font="800 44px 'Nunito',sans-serif"; c.fillText(pTxt, pad+130, ty);
+        if (hasSec){ c.fillStyle="#8A7454"; c.font="700 38px 'Nunito',sans-serif"; c.fillText(sTxt, pad+130, ty + 52); }
+        for (var d=0; d<7; d++){
+          key = i+"-"+d;
+          var cx = gridX + colW*d + colW/2, cy = wy2 + rowH/2;
+          if (state.ticks[key]){ c.fillStyle=T.accent; c.beginPath(); c.arc(cx,cy,40,0,Math.PI*2); c.fill();
+            c.fillStyle="#fff"; c.font="900 48px 'Nunito',sans-serif"; c.textAlign="center"; c.fillText("✓", cx, cy+4); c.textAlign="left";
+          } else { c.strokeStyle=T.accent; c.lineWidth=6; c.beginPath(); c.arc(cx,cy,40,0,Math.PI*2); c.stroke(); }
+        }
+        if (i < state.steps.length-1){ c.strokeStyle="#F6EBD7"; c.lineWidth=4; c.beginPath(); c.moveTo(pad, wy2+rowH); c.lineTo(W-pad, wy2+rowH); c.stroke(); }
+      }
+    }
+    c.fillStyle = "#8A7454"; c.font = "700 34px 'Nunito',sans-serif"; c.textAlign="center";
+    c.fillText("Made with love by Good Morning Kids · goodmorningkidsrhymes.blogspot.com", W/2, H - pad + 30);
+    c.textAlign="left";
+
+    var fname = (state.name ? state.name.toLowerCase().replace(/[^a-z0-9]+/g,"-") + "-" : "") + state.type + "-routine-chart.png";
+    if (cv.toBlob){
+      cv.toBlob(function(blob){
+        var a=document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = fname;
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800);
+      }, "image/png");
+    }
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
