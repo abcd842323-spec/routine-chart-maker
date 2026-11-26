@@ -829,5 +829,77 @@
   renderAll();
 })();
 </script>
+<!-- Gmail signup — Good Morning Kids email list (email-link verified) -->
+<section id="gmk-email-signup" style="max-width:640px;margin:28px auto 0;padding:20px 16px;text-align:center;border-top:2px dashed #f0c040;">
+<h3 style="margin:0 0 6px;font-size:18px;">Apna Gmail daalo — verify karo, naye free tools aur updates ki khabar pao</h3>
+<p style="margin:0 0 12px;color:#666;font-size:14px;">Hum aapke Gmail par ek verification link bhejenge. Link par click karte hi aapka email save ho jayega. Koi spam nahi.</p>
+<form id="gmkEmailForm" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+<input id="gmkEmailInput" type="email" required placeholder="aapka@gmail.com" style="flex:1;min-width:220px;max-width:320px;padding:10px 12px;font-size:15px;border:1px solid #ccc;border-radius:8px;" />
+<button type="submit" style="padding:10px 18px;font-size:15px;background:#f59e0b;color:#fff;border:none;border-radius:8px;cursor:pointer;">Verification Link Bhejo</button>
+</form>
+<p id="gmkEmailMsg" style="margin:10px 0 0;font-size:14px;min-height:20px;"></p>
+</section>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+var TOOL_NAME = "routine-chart-maker";
+var TOOL_URL = "https://abcd842323-spec.github.io/routine-chart-maker/";
+var form = document.getElementById("gmkEmailForm");
+var input = document.getElementById("gmkEmailInput");
+var msg = document.getElementById("gmkEmailMsg");
+var fbDb = null;
+function show(color, text){ msg.style.color = color; msg.textContent = text; }
+function initFb(){
+if (typeof firebase === "undefined") return false;
+if (!firebase.apps || !firebase.apps.length) {
+firebase.initializeApp({apiKey:"AIzaSyBwPT-AfPvxH3AbEJ8IMPDVFwieZfvv-yg",authDomain:"good-morning-kids-17b08.firebaseapp.com",projectId:"good-morning-kids-17b08",storageBucket:"good-morning-kids-17b08.firebasestorage.app",messagingSenderId:"805083378699",appId:"1:805083378699:web:a904d43f2cd2933aedc30e"});
+}
+fbDb = firebase.firestore();
+return true;
+}
+function handleEmailLink(){
+if (typeof firebase === "undefined") return;
+if (!firebase.auth().isSignInWithEmailLink(window.location.href)) return;
+var email = window.localStorage.getItem("gmkEmailForSignIn");
+if (!email) {
+email = window.prompt("Verification ke liye apna Gmail dobara daalo:");
+if (!email) return;
+}
+if (!initFb()) { show("#c00", "Verify nahi ho paya — internet check karke dobara try karo."); return; }
+firebase.auth().signInWithEmailLink(email, window.location.href).then(function(){
+window.localStorage.removeItem("gmkEmailForSignIn");
+return fbDb.collection("toolEmails").add({email: email.trim().toLowerCase(), tool: TOOL_NAME, verified: true, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+}).then(function(){
+show("green", "Gmail verify ho gaya, dhanyavaad! \u2713");
+if (form) form.querySelector("button").disabled = true;
+}).catch(function(){
+show("#c00", "Verification link kaam nahi kar raha — naya link mangne ke liye dobara Gmail daalo.");
+});
+}
+form.addEventListener("submit", function(e){
+e.preventDefault();
+var email = input.value.trim().toLowerCase();
+if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { show("#c00", "Sahi Gmail daalo — jaise aapka@gmail.com"); return; }
+show("#666", "Verification link bhej rahe hain…");
+if (!initFb()) { show("#c00", "Abhi link nahi bhej paye — internet check karke dobara try karo."); return; }
+var actionCodeSettings = { url: TOOL_URL, handleCodeInApp: true };
+firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings).then(function(){
+window.localStorage.setItem("gmkEmailForSignIn", email);
+show("green", "Verification link bhej diya! Apne Gmail me link kholo aur verify karo — tabhi aapka email save hoga.");
+form.querySelector("button").disabled = true;
+}).catch(function(){
+show("#c00", "Link nahi bhej paye — dobara try karo.");
+});
+});
+if (document.readyState === "loading") {
+document.addEventListener("DOMContentLoaded", handleEmailLink);
+} else {
+handleEmailLink();
+}
+})();
+</script>
+
 </body>
 </html>
